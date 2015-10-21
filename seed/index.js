@@ -5,7 +5,6 @@ var fs = require('fs'),
     _ = require('lodash'),
     path = require('path'),
     app = require('../server/server'),
-    nonprofits = require('./nonprofits.json'),
     jobs = require('./jobs.json');
 
 function getFilesFor(dir) {
@@ -13,11 +12,9 @@ function getFilesFor(dir) {
 }
 
 var Challenge = app.models.Challenge;
-var Nonprofit = app.models.Nonprofit;
 var Job = app.models.Job;
 var counter = 0;
 var challenges = getFilesFor('challenges');
-// plus two accounts for nonprofits and jobs seed.
 var numberToSave = challenges.length + 1;
 
 function completionMonitor() {
@@ -84,23 +81,6 @@ Challenge.destroyAll(function(err, info) {
         }
       }
     );
-  });
-});
-
-Nonprofit.destroyAll(function(err, info) {
-  if (err) {
-    console.error(err);
-  } else {
-    console.log('Deleted ', info);
-  }
-  Nonprofit.create(nonprofits, function(err, data) {
-    if (err) {
-      throw err;
-    } else {
-      console.log('Saved ', data);
-    }
-    completionMonitor(err);
-    console.log('nonprofits');
   });
 });
 

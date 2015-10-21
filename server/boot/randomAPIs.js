@@ -14,7 +14,6 @@ module.exports = function(app) {
   var User = app.models.User;
   var Challenge = app.models.Challenge;
   var Story = app.models.Story;
-  var Nonprofit = app.models.Nonprofit;
 
   router.get('/api/github', githubCalls);
   router.get('/api/blogger', bloggerCalls);
@@ -139,26 +138,6 @@ module.exports = function(app) {
               }
             }
           );
-        },
-        nonprofits: function(callback) {
-          Nonprofit.find(
-            { field: { name: true } },
-            function(err, nonprofits) {
-              if (err) {
-                debug('User err: ', err);
-                callback(err);
-              } else {
-                Rx.Observable.from(nonprofits, null, null, Rx.Scheduler.default)
-                  .map(function(nonprofit) {
-                    return nonprofit.name;
-                  })
-                  .toArray()
-                  .subscribe(
-                    callback.bind(callback, null),
-                    callback
-                  );
-              }
-            });
         }
       }, function(err, results) {
         if (err) {
@@ -171,8 +150,7 @@ module.exports = function(app) {
             now: now,
             users: results.users,
             challenges: results.challenges,
-            stories: results.stories,
-            nonprofits: results.nonprofits
+            stories: results.stories
           });
         });
       }
